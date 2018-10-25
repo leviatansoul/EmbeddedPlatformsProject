@@ -14,6 +14,10 @@ extern Thread threadANALOG;
 extern void ANALOG_thread();
 extern float valueLS; 
 
+//Color stuff
+extern Thread threadColorSensor;
+extern void ColorSensor_thread();
+extern int clear_value, red_value, green_value, blue_value; 
 
 
 
@@ -36,7 +40,8 @@ int main() {
 		mode = TEST;
     
 
-    threadANALOG.start(ANALOG_thread);
+    threadANALOG.start(ANALOG_thread);  
+		threadColorSensor.start(ColorSensor_thread);
 
 	
    	
@@ -53,8 +58,11 @@ int main() {
 					  wait(2);
 						myled1 = 1;
 						myled3 = 0;
-						myled2 = 0;							 
+						myled2 = 0;					 
             pc.printf("TEST \n\r");
+						
+						//Color Sensor Values
+						pc.printf("Clear (%d), Red (%d), Green (%d), Blue (%d)\n", clear_value, red_value, green_value, blue_value);
 				 
 				
             break;  
@@ -86,4 +94,3 @@ int main() {
 			
     }
 }
-
