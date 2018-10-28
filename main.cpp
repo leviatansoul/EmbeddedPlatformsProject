@@ -28,16 +28,12 @@ extern float soilData;
 extern float lightData;
 
 //I2C stuff
-/*
 extern Thread threadI2C;
 extern void I2C_thread();
 extern float rhData; //Humidity
 extern float tData; //Temperature
-*/
 extern int clear_value, red_value, green_value, blue_value; //Colors
 
-extern Thread threadColorSensor;
-extern void ColorSensor_thread();
 
 
 enum modes 
@@ -58,18 +54,14 @@ int main() {
 	  myled3 = 0;
 		mode = TEST;
 	
-	red = 0;
-	green = 0;
-	blue = 0;
+		red = 0;
+		green = 0;
+		blue = 0;
 	
     
 
     threadANALOG.start(ANALOG_thread);  
-		//threadI2C.start(I2C_thread);
-		threadColorSensor.start(ColorSensor_thread);
-	
-
-	
+		threadI2C.start(I2C_thread);
    	
     while (true) {		  
 			
@@ -90,18 +82,11 @@ int main() {
 				 
 						pc.printf("Soil %f", soilData);
 						pc.printf("Lihgt %f", lightData);
-						//pc.printf("Hum %f", rhData);
-						//pc.printf("Temp %f", tData);
+						pc.printf("Hum %f", rhData);
+						pc.printf("Temp %f", tData);
 				 		pc.printf("Clear (%i), Red (%i), Green (%i), Blue (%i)\n", clear_value, red_value, green_value, blue_value);
 						maxValueTEST( red_value, green_value, blue_value);
 				 
-	
-						
-					
-				 
-
-				 
-				
             break;  
 				 
          case NORMAL:  
@@ -133,11 +118,10 @@ int main() {
 }
 
 void maxValueTEST( int redv, int greenv, int bluev){
-	int color = 0;
+	int color = 0; //Var that indicates the max color
 	
-	printf("Values red %i, green %i, blue %i", redv, greenv, bluev);
-	
-	if (redv > greenv){
+	//We obtain the max value between the colors
+	if (redv > greenv){ 
 		if(redv > bluev){
 			color = RED;
 		} else {
