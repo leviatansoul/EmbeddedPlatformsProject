@@ -7096,6 +7096,21 @@
               <FileType>8</FileType>
               <FilePath>.\threadANALOG.cpp</FilePath>
             </File>
+            <File>
+              <FileName>threadColorSensor.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\threadColorSensor.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>Si7021.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Si7021.h</FilePath>
+            </File>
+            <File>
+              <FileName>threadI2cSensors.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\threadI2cSensors.cpp</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

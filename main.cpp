@@ -9,15 +9,17 @@ DigitalOut myled3(LED3); //advanced mode
 
 Serial pc(USBTX,USBRX,19200);
 
-
+//Analog stuff
 extern Thread threadANALOG;
 extern void ANALOG_thread();
-extern float valueLS; 
+extern float valueSS; 
 
-//Color stuff
-extern Thread threadColorSensor;
-extern void ColorSensor_thread();
-extern int clear_value, red_value, green_value, blue_value; 
+//I2C stuff
+extern Thread threadI2C;
+extern void I2C_thread();
+extern float rhData; //Humidity
+extern float tData; //Temperature
+extern double clear_value, red_value, green_value, blue_value; //Colors
 
 
 
@@ -41,7 +43,7 @@ int main() {
     
 
     threadANALOG.start(ANALOG_thread);  
-		threadColorSensor.start(ColorSensor_thread);
+		threadI2C.start(I2C_thread);
 
 	
    	
@@ -50,7 +52,7 @@ int main() {
 					
      
 			
-			pc.printf("VALOR %.lf ", valueLS);
+			pc.printf("VALOR %.lf ", valueSS);
 			
 			switch ( mode )  
       {  
@@ -61,8 +63,13 @@ int main() {
 						myled2 = 0;					 
             pc.printf("TEST \n\r");
 						
-						//Color Sensor Values
-						pc.printf("Clear (%d), Red (%d), Green (%d), Blue (%d)\n", clear_value, red_value, green_value, blue_value);
+						
+				 
+						pc.printf("Soil %f", valueSS);
+						pc.printf("Hum %f", rhData);
+						pc.printf("Temp %f", tData);
+				 		pc.printf("Clear (%d), Red (%d), Green (%d), Blue (%d)\n", clear_value, red_value, green_value, blue_value);
+
 				 
 				
             break;  
