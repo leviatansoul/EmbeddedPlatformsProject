@@ -1,3 +1,4 @@
+
 // Example program connecting to the TCS34725 Color Sensor to the K64F using I2C
 #include "mbed.h"
 #include "rtos.h"
@@ -6,7 +7,7 @@ Thread threadColorSensor(osPriorityNormal, 512); // 1K stack size
 
 void ColorSensor_thread(); 
  
-I2C i2c(PB_14, PB_13); //pins for I2C communication (SDA, SCL)
+I2C i2c(PB_9, PB_8); //pins for I2C communication (SDA, SCL)
 
 
 int sensor_addr = 41 << 1;

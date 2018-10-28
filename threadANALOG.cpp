@@ -3,8 +3,10 @@
 
 
 AnalogIn soilSensor(PA_0); 
+AnalogIn lightSensor(PA_4); 
 
-float valueSS=0.0;
+float soilData=0.0;
+float lightData=0.0;
 
 Thread threadANALOG(osPriorityNormal, 512); // 1K stack size
 
@@ -14,8 +16,9 @@ void ANALOG_thread() {
 		while (true) {
 
 				Thread::wait(200);
-				valueSS=soilSensor*100;
-				//printf("%f", valueSS);
+				soilData=soilSensor*100;
+				lightData = lightSensor*100;
+				//printf("%f", soilData);
 				  
     }
 }

@@ -1,3 +1,4 @@
+/*
 // Example program connecting to the TCS34725 Color Sensor to the K64F using I2C
 #include "mbed.h"
 #include "rtos.h"
@@ -121,3 +122,4 @@ void I2C_thread() {
 		wait(2);
 	}
 }  
+*/

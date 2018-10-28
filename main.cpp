@@ -9,18 +9,35 @@ DigitalOut myled3(LED3); //advanced mode
 
 Serial pc(USBTX,USBRX,19200);
 
+//RGB LED
+DigitalOut blue(PB_13);
+DigitalOut green(PB_14);
+DigitalOut red(PB_15);
+void maxValueTEST( int , int , int ); //Color decision in TEST Mode
+enum color {
+	RED,
+	GREEN,
+	BLUE
+};
+int color;
+
 //Analog stuff
 extern Thread threadANALOG;
 extern void ANALOG_thread();
-extern float valueSS; 
+extern float soilData; 
+extern float lightData;
 
 //I2C stuff
+/*
 extern Thread threadI2C;
 extern void I2C_thread();
 extern float rhData; //Humidity
 extern float tData; //Temperature
-extern double clear_value, red_value, green_value, blue_value; //Colors
+*/
+extern int clear_value, red_value, green_value, blue_value; //Colors
 
+extern Thread threadColorSensor;
+extern void ColorSensor_thread();
 
 
 enum modes 
@@ -40,10 +57,17 @@ int main() {
     myled2 = 0;
 	  myled3 = 0;
 		mode = TEST;
+	
+	red = 0;
+	green = 0;
+	blue = 0;
+	
     
 
     threadANALOG.start(ANALOG_thread);  
-		threadI2C.start(I2C_thread);
+		//threadI2C.start(I2C_thread);
+		threadColorSensor.start(ColorSensor_thread);
+	
 
 	
    	
@@ -52,7 +76,7 @@ int main() {
 					
      
 			
-			pc.printf("VALOR %.lf ", valueSS);
+			pc.printf("VALOR %.lf ", soilData);
 			
 			switch ( mode )  
       {  
@@ -62,13 +86,19 @@ int main() {
 						myled3 = 0;
 						myled2 = 0;					 
             pc.printf("TEST \n\r");
-						
-						
+												
 				 
-						pc.printf("Soil %f", valueSS);
-						pc.printf("Hum %f", rhData);
-						pc.printf("Temp %f", tData);
-				 		pc.printf("Clear (%d), Red (%d), Green (%d), Blue (%d)\n", clear_value, red_value, green_value, blue_value);
+						pc.printf("Soil %f", soilData);
+						pc.printf("Lihgt %f", lightData);
+						//pc.printf("Hum %f", rhData);
+						//pc.printf("Temp %f", tData);
+				 		pc.printf("Clear (%i), Red (%i), Green (%i), Blue (%i)\n", clear_value, red_value, green_value, blue_value);
+						maxValueTEST( red_value, green_value, blue_value);
+				 
+	
+						
+					
+				 
 
 				 
 				
@@ -100,4 +130,46 @@ int main() {
       } 
 			
     }
+}
+
+void maxValueTEST( int redv, int greenv, int bluev){
+	int color = 0;
+	
+	printf("Values red %i, green %i, blue %i", redv, greenv, bluev);
+	
+	if (redv > greenv){
+		if(redv > bluev){
+			color = RED;
+		} else {
+			color = BLUE;
+		}
+	} else {
+		if (greenv > bluev){
+			color = GREEN;
+		} else {
+			color = BLUE;
+		}
+	}
+	
+	switch (color){
+		case RED:
+			red = 0;
+			green = 1;
+			blue = 1;
+			break;
+		case GREEN:
+			green = 0;
+			red = 1;
+			blue = 1;
+			break;
+		case BLUE:
+			blue = 0;
+			red = 1;
+			green = 1;
+			break;
+		default:
+			break;
+	}
+	
+	
 }
