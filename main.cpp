@@ -1,25 +1,28 @@
 #include "mbed.h"
 #include "rtos.h"
 
+
 //DIEGO GARCIA DIAZ y ANDREAS BECK
 
 DigitalOut myled1(LED1); //test mode
 DigitalOut myled2(LED2); //normal mode
 DigitalOut myled3(LED3); //advanced mode
 
-Serial pc(USBTX,USBRX,19200);
+Serial pc(USBTX,USBRX,9600);
+
+
 
 
 extern Thread threadANALOG;
 extern void ANALOG_thread();
 extern float valueLS; 
 
-//Color stuff
-extern Thread threadColorSensor;
-extern void ColorSensor_thread();
-extern int clear_value, red_value, green_value, blue_value; 
+//ThreadGPS
+extern Thread threadGPS;
+extern void GPS_thread();
+extern float gpsTime, longitude;
 
-
+extern bool noanswer;
 
 enum modes 
 {   TEST, 
@@ -39,18 +42,14 @@ int main() {
 	  myled3 = 0;
 		mode = TEST;
     
-
-    threadANALOG.start(ANALOG_thread);  
-		threadColorSensor.start(ColorSensor_thread);
-
+		pc.printf("Inicializing Threads");
+    //threadANALOG.start(ANALOG_thread);  
+		threadGPS.start(GPS_thread);
+		pc.printf("DONE");
 	
    	
     while (true) {		  
-			
-					
-     
-			
-			pc.printf("VALOR %.lf ", valueLS);
+		
 			
 			switch ( mode )  
       {  
@@ -60,9 +59,14 @@ int main() {
 						myled3 = 0;
 						myled2 = 0;					 
             pc.printf("TEST \n\r");
+				 
+						pc.printf("Time: %f\n\r Longitude: %f", gpsTime, longitude);
+				 
+					if (noanswer) {
+						pc.printf("NO SAMPLE()");
+					}
 						
-						//Color Sensor Values
-						pc.printf("Clear (%d), Red (%d), Green (%d), Blue (%d)\n", clear_value, red_value, green_value, blue_value);
+
 				 
 				
             break;  
