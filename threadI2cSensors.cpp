@@ -8,6 +8,9 @@ Thread threadI2C(osPriorityNormal, 512); // 1K stack size
 void I2C_thread(); 
  
 I2C i2c(PB_9, PB_8); //pins for I2C communication (SDA, SCL)
+extern Serial pc;
+extern int timeToWait;
+extern int mode;
 
 char tx_buff[2] = {0,0};
 char rx_buff[2] = {0,0};
@@ -55,13 +58,13 @@ void I2C_thread() {
     i2c.read(TSC34725_ADDR,data,1,false);
      
     
-    char timing_register[2] = {129,0};
+    char timing_register[2] = {129,0};//0x81
     i2c.write(TSC34725_ADDR,timing_register,2,false);
     
-    char control_register[2] = {143,0};
+    char control_register[2] = {143,0}; //0x8F
     i2c.write(TSC34725_ADDR,control_register,2,false);
     
-    char enable_register[2] = {128,3};
+    char enable_register[2] = {128,3}; //0x80
     i2c.write(TSC34725_ADDR,enable_register,2,false);
   
 				
@@ -148,6 +151,6 @@ void I2C_thread() {
 		blue_value = ((int)blue_data[1] << 8) | blue_data[0];
 		
 		
-		wait(2);
+		wait(timeToWait);
 	}
 }  

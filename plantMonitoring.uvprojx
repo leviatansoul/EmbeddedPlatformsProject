@@ -7097,11 +7097,6 @@
               <FilePath>.\threadANALOG.cpp</FilePath>
             </File>
             <File>
-              <FileName>threadColorSensor.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\threadColorSensor.cpp</FilePath>
-            </File>
-            <File>
               <FileName>threadI2cSensors.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\threadI2cSensors.cpp</FilePath>
