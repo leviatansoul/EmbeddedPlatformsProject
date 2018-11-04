@@ -9,6 +9,11 @@ DigitalOut myled3(LED3); //advanced mode
 
 Serial pc(USBTX,USBRX,19200);
 
+Ticker t;
+int timerCounter;
+void sendCalculations(void);
+bool ticker = false;
+
 //RGB LED
 DigitalOut blue(PB_13);
 DigitalOut green(PH_1);
@@ -25,15 +30,38 @@ int color;
 //Analog stuff
 extern Thread threadANALOG;
 extern void ANALOG_thread();
-extern float soilData; 
-extern float lightData;
+
+extern float soilData; //Soil Measure
+extern float soilDataAverage;
+extern float soilDataMaximum;
+extern float soilDataMinimum;
+
+extern float lightData; //Light Measure
+extern float lightDataAverage;
+extern float lightDataMaximum;
+extern float lightDataMinimum;
+
+//GPS Stuff
+extern Thread threadGPS;
+extern void GPS_thread();
+extern float longitudeGPS, latitudeGPS, timeGPS, hdopGPS, altGPS, geoidGPS;
+extern int satsGPS;
+
 
 //I2C stuff
 extern Thread threadI2C;
 extern void I2C_thread();
+
 extern float rhData; //Humidity
+extern float rhDataAverage;
+extern float rhDataMaximum;
+extern float rhDataMinimum;
 bool hum_out_of_range = false;
+
 extern float tData; //Temperature
+extern float tDataAverage;
+extern float tDataMaximum;
+extern float tDataMinimum;
 bool temp_out_of_range = false;
 extern int clear_value, red_value, green_value, blue_value; //Colors
 bool checkTemperature(float); //Check if temperature is out of range and print the result
@@ -65,9 +93,13 @@ int main() {
 		green = 0;
 		blue = 0;
 	    
+		timerCounter = 0;
+		t.attach(sendCalculations, 4);
 
     threadANALOG.start(ANALOG_thread);  
 		threadI2C.start(I2C_thread);
+		threadGPS.start(GPS_thread);
+
    	
     while (true) {		  
 								
@@ -90,7 +122,15 @@ int main() {
 					 pc.printf("LIGHT: %.2f %% \n\r", lightData);
 					 pc.printf("TEMPERATURE: %.2f C \n\r", tData);
 					 pc.printf("RELATIVE HUMIDITY: %.2f %% \n\r", rhData);
-					 pc.printf("COLOR SENSOR: Clear (%i), Red (%i), Green (%i), Blue (%i)", clear_value, red_value, green_value, blue_value);
+					 pc.printf("COLOR SENSOR: Clear (%i), Red (%i), Green (%i), Blue (%i)", clear_value, red_value, green_value, blue_value);				 
+					 //pc.printf("GPS:  \n\r");
+				 
+					pc.printf("COUNTER: %i AQUI \n\r", timerCounter);
+				 if(ticker){
+						 pc.printf("HUMIDITY AVERAGE : %f \n\r", rhDataAverage);
+						 ticker = false;
+					 }
+				 
 			 		 maxValueTEST( red_value, green_value, blue_value);
 				 
 				 
@@ -126,6 +166,11 @@ int main() {
 					 
 					 pc.printf("COLOR SENSOR: Clear (%i), Red (%i), Green (%i), Blue (%i)", clear_value, red_value, green_value, blue_value);
 			 		 outOfRangesNORMAL();
+					 
+					 if(ticker){
+						 pc.printf("HUMIDITY AVERAGE : %f \n\r", rhDataAverage);
+						 ticker = false;
+					 }
 				 
 				 
 					  wait(timeToWait);
@@ -226,4 +271,12 @@ void outOfRangesNORMAL(){
 			blue = 0;
 	}
 	
+}
+
+void sendCalculations(void){
+	timerCounter = timerCounter + 1;
+	if(timerCounter == 2){
+		ticker = true;
+		timerCounter = 0;
+	}
 }

@@ -11,6 +11,7 @@ I2C i2c(PB_9, PB_8); //pins for I2C communication (SDA, SCL)
 extern Serial pc;
 extern int timeToWait;
 extern int mode;
+bool initI2C = true;
 
 char tx_buff[2] = {0,0};
 char rx_buff[2] = {0,0};
@@ -33,9 +34,19 @@ int READ_TEMP = 224;
 
 int DEVICE_ID = 0;
 float rhData = 0;
+float rhDataAverage;
+float rhDataMaximum;
+float rhDataMinimum;
+
 float tData = 0;
+float tDataAverage;
+float tDataMaximum;
+float tDataMinimum;
 
 
+extern float getAverage(float, float, bool);
+extern float getMax(float , float, bool );
+extern float getMin(float , float, bool );
 
 void I2C_thread() {
     
@@ -81,6 +92,10 @@ void I2C_thread() {
 		rhData = (rhData*125/65536)-6;
 		//printf("Hum %f", rhData);
 		
+		rhDataAverage = getAverage(rhDataAverage,rhData, initI2C);
+		rhDataMaximum = getMax(rhDataMaximum, rhData, initI2C);
+		rhDataMinimum = getMin(rhDataMinimum, rhData, initI2C);
+		
 		
 		//READ TEMPERATURE
 		tx_buff[0] = READ_TEMP;
@@ -90,6 +105,10 @@ void I2C_thread() {
 
 		tData = (float)((uint32_t) rx_buff[0] << 8) + (rx_buff[1]);
 		tData = (tData*175.72/65536)-46.85;
+		
+		tDataAverage = getAverage(tDataAverage,tData, initI2C);
+		tDataMaximum = getMax(tDataMaximum, tData, initI2C);
+		tDataMinimum = getMin(tDataMinimum, tData, initI2C);
 		
 		
 		/*
@@ -150,6 +169,8 @@ void I2C_thread() {
 		
 		blue_value = ((int)blue_data[1] << 8) | blue_data[0];
 		
+		
+		initI2C = false;
 		
 		wait(timeToWait);
 	}
