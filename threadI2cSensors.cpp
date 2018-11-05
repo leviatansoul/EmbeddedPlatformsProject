@@ -20,6 +20,7 @@ char rx_buff[2] = {0,0};
 //COLOR SENSOR VALUES
 int TSC34725_ADDR = 41 << 1; // Color sensor address
 int clear_value, red_value, green_value, blue_value;
+int clearAverage, redAverage, greenAverage, blueAverage;
 int CLEAR_REG = 148;
 int BLUE_REG = 154;
 int RED_REG = 150;
@@ -45,6 +46,7 @@ float tDataMinimum;
 
 
 extern float getAverage(float, float, bool);
+extern int getAverage(int, int, bool);
 extern float getMax(float , float, bool );
 extern float getMin(float , float, bool );
 
@@ -147,20 +149,23 @@ void I2C_thread() {
 		i2c.read(TSC34725_ADDR,clear_data,2, false);
 		
 		clear_value = ((int)clear_data[1] << 8) | clear_data[0];
+		clearAverage = getAverage(clearAverage,clear_value, initI2C);
 		
 		char red_reg[1] = {150};
 		char red_data[2] = {0,0};
 		i2c.write(TSC34725_ADDR,red_reg,1, true);
 		i2c.read(TSC34725_ADDR,red_data,2, false);
 		
-		red_value = ((int)red_data[1] << 8) | red_data[0];
+		red_value = ((int)red_data[1] << 8) | red_data[0];		
+		redAverage = getAverage(redAverage,red_value, initI2C);
 		
 		char green_reg[1] = {152};
 		char green_data[2] = {0,0};
 		i2c.write(TSC34725_ADDR,green_reg,1, true);
 		i2c.read(TSC34725_ADDR,green_data,2, false);
 		
-		green_value = ((int)green_data[1] << 8) | green_data[0];
+		green_value = ((int)green_data[1] << 8) | green_data[0];		
+		greenAverage = getAverage(greenAverage,green_value, initI2C);
 		
 		char blue_reg[1] = {154};
 		char blue_data[2] = {0,0};
@@ -168,6 +173,7 @@ void I2C_thread() {
 		i2c.read(TSC34725_ADDR,blue_data,2, false);
 		
 		blue_value = ((int)blue_data[1] << 8) | blue_data[0];
+		blueAverage = getAverage(blueAverage,blue_value, initI2C);
 		
 		
 		initI2C = false;

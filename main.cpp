@@ -18,7 +18,8 @@ bool ticker = false;
 DigitalOut blue(PB_13);
 DigitalOut green(PH_1);
 DigitalOut red(PH_0);
-void maxValueTEST( int , int , int ); //Color decision in TEST Mode
+void maxValueColorTEST( int , int , int ); //Color decision in TEST Mode
+void maxValueColorNORMAL( int , int , int ); //Color decision in TEST Mode
 void outOfRangesNORMAL(); //Color decision in NORMAL mode based in values out of ranges
 enum color {
 	RED,
@@ -63,7 +64,9 @@ extern float tDataAverage;
 extern float tDataMaximum;
 extern float tDataMinimum;
 bool temp_out_of_range = false;
+
 extern int clear_value, red_value, green_value, blue_value; //Colors
+extern int clearAverage, redAverage, greenAverage, blueAverage;
 bool checkTemperature(float); //Check if temperature is out of range and print the result
 bool checkHumidity(float); //Check if humidity is out of range and print the result
 
@@ -131,7 +134,7 @@ int main() {
 						 ticker = false;
 					 }
 				 
-			 		 maxValueTEST( red_value, green_value, blue_value);
+			 		 maxValueColorTEST( red_value, green_value, blue_value);
 				 
 				 
 					  wait(timeToWait);
@@ -161,16 +164,24 @@ int main() {
 					 if(checkHumidity(rhData)){
 						 pc.printf("RELATIVE HUMIDITY: OUT OF RANGE \n\r");
 					 }else{
-					 pc.printf("RELATIVE HUMIDITY: %.2f C \n\r", rhData);						 
+					 pc.printf("RELATIVE HUMIDITY: %.2f %% \n\r", rhData);						 
 					 }
 					 
 					 pc.printf("COLOR SENSOR: Clear (%i), Red (%i), Green (%i), Blue (%i)", clear_value, red_value, green_value, blue_value);
 			 		 outOfRangesNORMAL();
 					 
 					 if(ticker){
-						 pc.printf("HUMIDITY AVERAGE : %f \n\r", rhDataAverage);
+						 pc.printf("HUMIDITY AVERAGE : %.2f %% \n\r", rhDataAverage);
+						 pc.printf("TEMPERATURE AVERAGE : %.2f C \n\r", tDataAverage);
+						 pc.printf("SOIL AVERAGE : %.2f %% \n\r", soilDataAverage);
+						 pc.printf("LIGHT AVERAGE : %.2f %% \n\r", lightDataAverage);
+						 
+						 maxValueColorNORMAL( red_value, green_value, blue_value);
+						 
 						 ticker = false;
 					 }
+					 
+					 
 				 
 				 
 					  wait(timeToWait);
@@ -196,7 +207,7 @@ int main() {
     }
 }
 
-void maxValueTEST( int redv, int greenv, int bluev){
+void maxValueColorTEST( int redv, int greenv, int bluev){
 	int color = 0; //Var that indicates the max color
 	
 	//We obtain the max value between the colors
@@ -239,6 +250,25 @@ void maxValueTEST( int redv, int greenv, int bluev){
 		
 }
 
+void maxValueColorNORMAL( int redv, int greenv, int bluev){
+	
+	//We obtain the max value between the colors
+	if (redv > greenv){ 
+		if(redv > bluev){
+			pc.printf(" -- Dominant color in the last hour: RED\n\r");
+		} else {
+			pc.printf(" -- Dominant color in the last hour: BLUE\n\r");
+		}
+	} else {
+		if (greenv > bluev){
+				pc.printf(" -- Dominant color in the last hour: GREEN\n\r");
+		} else {
+			pc.printf(" -- Dominant color in the last hour: BLUE\n\r");
+		}
+	}
+	
+}
+
 bool checkTemperature(float t){
 	if( t > 50 || t < -10){
 		temp_out_of_range = true;
@@ -251,6 +281,7 @@ bool checkTemperature(float t){
 bool checkHumidity(float h){
 	if( h > 75 || h < 25){
 		hum_out_of_range = true;
+		
 		return true;
 	}
 	hum_out_of_range = false;
@@ -263,12 +294,14 @@ void outOfRangesNORMAL(){
 			red = 0;
 			green = 1;
 			blue = 1;
-	}
-	
-	if(hum_out_of_range){
+	}else	if(hum_out_of_range){
 			red = 1;
 			green = 1;
 			blue = 0;
+	} else {
+			red = 1;
+			green = 1;
+			blue = 1;
 	}
 	
 }

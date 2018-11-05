@@ -15,10 +15,13 @@ bool init = true;
 
 float lightDataAverage;
 float getAverage(float, float, bool);
+int getAverage(int, int, bool);
 float lightDataMaximum;
 float getMax(float , float, bool );
 float lightDataMinimum;
 float getMin(float , float, bool );
+
+int maxValueThree( int , int, int );
 
 
 
@@ -82,4 +85,28 @@ float getAverage(float a, float data, bool init){
 		return data;
 	}
 	return (a + data)/2;
+}
+
+int getAverage(int a, int data, bool init){
+		if(init){
+		return data;
+	}
+	return (a + data)/2;
+}
+
+int maxValueThree( int a, int b, int c){
+	if (a > b){ 
+		if(a > c){
+			return a;
+		} else {
+			return c;
+		}
+	} else {
+		if (b > c){
+			return b;
+		} else {
+			return c;
+		}
+	}
+	
 }
