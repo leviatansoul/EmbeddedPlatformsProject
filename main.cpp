@@ -45,7 +45,7 @@ extern float lightDataMinimum;
 //GPS Stuff
 extern Thread threadGPS;
 extern void GPS_thread();
-extern float longitudeGPS, latitudeGPS, timeGPS, hdopGPS, altGPS, geoidGPS;
+extern float longitudeGPS, latitudeGPS, timeGPS, altGPS, geoidGPS;
 extern int satsGPS;
 
 
@@ -125,8 +125,14 @@ int main() {
 					 pc.printf("LIGHT: %.2f %% \n\r", lightData);
 					 pc.printf("TEMPERATURE: %.2f C \n\r", tData);
 					 pc.printf("RELATIVE HUMIDITY: %.2f %% \n\r", rhData);
-					 pc.printf("COLOR SENSOR: Clear (%i), Red (%i), Green (%i), Blue (%i)", clear_value, red_value, green_value, blue_value);				 
-					 //pc.printf("GPS:  \n\r");
+					 pc.printf("COLOR SENSOR: Clear (%i), Red (%i), Green (%i), Blue (%i)", clear_value, red_value, green_value, blue_value);						 
+					 pc.printf("GPS:  \n\r");
+							pc.printf("\n\rLongitude: %f", longitudeGPS);
+							pc.printf("\n\rLatitude: %f", latitudeGPS);
+							pc.printf("\n\rTime: %f", timeGPS);
+							pc.printf("\n\rAltitude: %f", altGPS);
+							pc.printf("\n\rGeo ID: %f", geoidGPS);
+							pc.printf("\n\rSatelites: %d", satsGPS);
 				 
 					pc.printf("COUNTER: %i AQUI \n\r", timerCounter);
 				 if(ticker){

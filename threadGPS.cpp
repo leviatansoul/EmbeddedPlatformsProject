@@ -1,7 +1,7 @@
 #include "mbed.h"
 #include "rtos.h"
 #include "SerialGPS.h"
-Thread threadGPS(osPriorityNormal, 512); // 1K stack 
+Thread threadGPS(osPriorityNormal, 1024); // 1K stack 
 
  
 SerialGPS gps(PA_9,PA_10,9600);
@@ -20,10 +20,11 @@ void GPS_thread() {
 	
     while(true) {        
 
-			pc.printf("asdfasdfasdf");
-			gps.sample();
-			pc.printf("inside");
+			pc.printf("\n\rGPS Sample start");
 			
+			gps.sample();
+			
+			pc.printf("inside");
 		/*	if (working) {
 				pc.printf("GPS message found");
 			} else {

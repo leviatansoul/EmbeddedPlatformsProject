@@ -7076,6 +7076,16 @@
               <FileType>5</FileType>
               <FilePath>.\mbed-os\features\mbedtls\inc\mbedtls\xtea.h</FilePath>
             </File>
+            <File>
+              <FileName>MMA8451Q.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\MMA8451Q.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>MMA8451Q.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\MMA8451Q.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -7115,6 +7125,11 @@
               <FileName>threadGPS.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\threadGPS.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>threadAccel.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\threadAccel.cpp</FilePath>
             </File>
           </Files>
         </Group>
