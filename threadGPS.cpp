@@ -20,11 +20,11 @@ void GPS_thread() {
 	
     while(true) {        
 
-			pc.printf("\n\rGPS Sample start");
+		//	pc.printf("\n\rGPS Sample start");
 			
 			gps.sample();
 			
-			pc.printf("inside");
+			//pc.printf("inside");
 		/*	if (working) {
 				pc.printf("GPS message found");
 			} else {

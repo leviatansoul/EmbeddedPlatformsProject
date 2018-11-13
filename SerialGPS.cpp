@@ -30,6 +30,8 @@
 }
 */
 
+float hour, minute, seconds;
+void parseTime(float timeGPS);
 
 SerialGPS::SerialGPS(PinName tx, PinName rx, int Baud) : _gps(tx, rx) {
     _gps.baud(Baud);    
@@ -97,4 +99,13 @@ void SerialGPS::getline() {
         }
     }
     error("Overflowed message limit");
+}
+
+
+void parseTime(float tiempo){
+	
+	hour = tiempo / 10000;
+	minute = ( fmod(tiempo,10000) ) / 100;
+	seconds = (fmod(tiempo,100));	
+	
 }
